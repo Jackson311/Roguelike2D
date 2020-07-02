@@ -33,7 +33,14 @@ public class GameManager : MonoBehaviour
         _gameManager = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
         InitGame();
+    }
+
+    private void Start()
+    {
+        // 绑定玩家移动时
+       GameObject.Find("Player").GetComponent<Player>().onPlayerMove += OnPlayerMove;
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -46,13 +53,20 @@ public class GameManager : MonoBehaviour
     {
         _Enemies.Clear();
         GetComponent<MapManager>().InitMap();
+
+        DealText();
         
+        StartCoroutine(HideImage());
+    }
+
+    void DealText()
+    {
         _text = GameObject.Find("Text").GetComponent<Text>();
-        UpdateFoodText(0);
         _failedText = GameObject.Find("FailedText").GetComponent<Text>();
+
+        UpdateFoodText(0);
         _failedText.enabled = false;
         GameObject.Find("DayText").GetComponent<Text>().text = "Day " + level;
-        Invoke("HideImage",1);
     }
 
     void UpdateFoodText(int Change)
@@ -72,7 +86,7 @@ public class GameManager : MonoBehaviour
         UpdateFoodText((int)count);
     }
 
-    public void Reduce(uint count)
+    public void ReduceFood(uint count)
     {
         food -= (int) count;
         UpdateFoodText(-(int)count);
@@ -93,16 +107,19 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Reduce(1);
+        ReduceFood(1);
     }
 
     public void EndGame()
     {
         SceneManager.LoadScene(0);
     }
-
-    public void HideImage()
+    
+    
+    IEnumerator HideImage()
     {
+        yield return new WaitForSeconds(1);
         GameObject.Find("DayImage").gameObject.SetActive(false);
+        
     }
 }

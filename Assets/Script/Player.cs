@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 玩家移动代理
+public delegate void PlayerMoveDelegate();
+
 public class Player : MonoBehaviour
 {
     public float smoothing = 40;
@@ -19,6 +22,9 @@ public class Player : MonoBehaviour
     private Vector2 tagerPostion = new Vector2(1,1);
     private BoxCollider2D _boxCollider2D;
     private Animator _animator;
+    
+    // 当玩家移动时
+    public event PlayerMoveDelegate onPlayerMove;
     
     // Start is called before the first frame update
     void Start()
@@ -50,10 +56,12 @@ public class Player : MonoBehaviour
         
         if (x != 0 || y != 0)
         {
+            if(onPlayerMove != null)
+                onPlayerMove();
+            
             restTimeHandle = 0;
-            GameManager.Instance.OnPlayerMove();
+            
             AudioManager.Instance.RandomClip(_footAudio);
-
             
             _boxCollider2D.enabled = false;
             RaycastHit2D hit =  Physics2D.Linecast(tagerPostion, tagerPostion + new Vector2(x, y));
@@ -98,7 +106,7 @@ public class Player : MonoBehaviour
 
     public void OnDamage(uint reduceFoodCount)
     {
-        GameManager.Instance.Reduce(reduceFoodCount);
+        GameManager.Instance.ReduceFood(reduceFoodCount);
         _animator.SetTrigger("damage");
     }
 }

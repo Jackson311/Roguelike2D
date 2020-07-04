@@ -36,11 +36,6 @@ public class Enemy : MonoBehaviour
 
     }
 
-    private void OnDestroy()
-    {
-        _player.GetComponent<Player>().onPlayerMove -= Move;
-    }
-
     public void Move()
     {
         if (sleepMove)

@@ -20,13 +20,12 @@ public class CommandButton : MonoBehaviour
     public void DoButton()
     {
         Debug.Log("Do");
-        CommandManager.Instance().DoCommand();
+        GameManager.Instance._commandManager.DoCommand();
     }
 
     public void UnDoButton()
     {
         Debug.Log("UnDo");
-        CommandManager.Instance().UnDoCommand();
-
+        GameManager.Instance._commandManager.UnDoCommand();
     }
 }

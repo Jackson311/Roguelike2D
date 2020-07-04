@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour
     private Text _text;
     private Text _failedText;
     private Player _player;
-    
+
+    // 命令管理器
+    public CommandManager _commandManager;
     public static GameManager Instance
     {
         get => _gameManager;
@@ -34,8 +36,6 @@ public class GameManager : MonoBehaviour
     {
         _gameManager = this;
         DontDestroyOnLoad(gameObject);
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        
         InitGame();
     }
 
@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     {
         // 绑定玩家移动时
         
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
 
     }
@@ -56,6 +57,8 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
+        _commandManager = new CommandManager();
+        
         _Enemies.Clear();
         GetComponent<MapManager>().InitMap();
 

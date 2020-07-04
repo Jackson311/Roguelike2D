@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
         {
             tempPostion.x = x;
             tempPostion.y = y;
-            CommandManager.Instance().ExecuteCommand(new PlayerMoveCommand(this,targetPostion + tempPostion));
+            GameManager.Instance._commandManager.ExecuteCommand(new PlayerMoveCommand(this,targetPostion + tempPostion));
         }
         
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
@@ -14,6 +15,7 @@ public class Enemy : MonoBehaviour
     
     public uint lossFood = 10;
     public AudioClip[] _attackAudio;
+    private bool sleepMove = false;
     
     // Start is called before the first frame update
     void Start()
@@ -23,7 +25,8 @@ public class Enemy : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider2D>();
-        GameManager.Instance._Enemies.Add(this);
+
+        _player.GetComponent<Player>().onPlayerMove += Move;
     }
 
     // Update is called once per frame
@@ -33,8 +36,22 @@ public class Enemy : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        _player.GetComponent<Player>().onPlayerMove -= Move;
+    }
+
     public void Move()
     {
+        if (sleepMove)
+        {
+            sleepMove = false;
+            return;
+        }
+
+        sleepMove = true;
+        
+        
         Vector2 offset = _player.transform.position - transform.position;
         if (offset.magnitude <= 1.1f)
         {
@@ -87,5 +104,6 @@ public class Enemy : MonoBehaviour
         }
 
     }
+    
     
 }

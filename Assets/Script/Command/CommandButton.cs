@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Script.Command;
 using UnityEngine;
 
 public class CommandButton : MonoBehaviour
@@ -19,10 +20,13 @@ public class CommandButton : MonoBehaviour
     public void DoButton()
     {
         Debug.Log("Do");
+        CommandManager.Instance().DoCommand();
     }
 
     public void UnDoButton()
     {
         Debug.Log("UnDo");
+        CommandManager.Instance().UnDoCommand();
+
     }
 }

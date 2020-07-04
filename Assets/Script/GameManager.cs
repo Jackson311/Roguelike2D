@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Script.Command;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     private bool sleepStep;
     private Text _text;
     private Text _failedText;
+    private Player _player;
     
     public static GameManager Instance
     {
@@ -40,12 +42,15 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // 绑定玩家移动时
-       GameObject.Find("Player").GetComponent<Player>().onPlayerMove += OnPlayerMove;
+        
+
+
     }
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         ++Level;
+
         InitGame();
     }
 
@@ -55,6 +60,9 @@ public class GameManager : MonoBehaviour
         GetComponent<MapManager>().InitMap();
 
         DealText();
+        
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        _player.enabled = false;
         
         StartCoroutine(HideImage());
     }
@@ -94,21 +102,6 @@ public class GameManager : MonoBehaviour
             _failedText.enabled = true;
     }
 
-    public void OnPlayerMove()
-    {
-        if (sleepStep)
-            sleepStep = false;
-        else
-        {
-            sleepStep = true;
-            foreach (Enemy enemy in _Enemies)
-            {
-                enemy.Move();
-            }
-        }
-
-        ReduceFood(1);
-    }
 
     public void EndGame()
     {
@@ -120,6 +113,6 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         GameObject.Find("DayImage").gameObject.SetActive(false);
-        
+        _player.enabled = true;
     }
 }
